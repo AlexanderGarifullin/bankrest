@@ -1,4 +1,4 @@
-package hse.greendata.bankrest.util.OrganizationalLegalForm;
+package hse.greendata.bankrest.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
