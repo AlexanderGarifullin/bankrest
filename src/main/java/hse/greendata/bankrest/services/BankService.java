@@ -31,8 +31,12 @@ public class BankService {
                 new BankNotFoundException("Bank with id " + id + " not found"));
     }
 
-    public Optional<Bank> findOne(String name) {
+    public Optional<Bank> findOneByName(String name) {
         return bankRepository.findByName(name);
+    }
+
+    public Optional<Bank> findOneByBik(String bik) {
+        return bankRepository.findByBik(bik);
     }
 
     @Transactional
