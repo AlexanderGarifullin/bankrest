@@ -31,6 +31,10 @@ public class OrganizationalLegalFormService {
                 new OrganizationalLegalFormNotFoundException("Organizational legal form with id " + id + " not found"));
     }
 
+    public Optional<OrganizationalLegalForm> findOne(String name) {
+        return organizationalLegalFormRepository.findByName(name);
+    }
+
     @Transactional
     public void save(OrganizationalLegalForm organizationalLegalForm) {
         organizationalLegalFormRepository.save(organizationalLegalForm);
