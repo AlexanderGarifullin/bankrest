@@ -20,14 +20,6 @@ public class Deposit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "client_id")
-    @NotBlank(message = "Client Id is required")
-    private Integer clientId;
-
-    @Column(name = "bank_id")
-    @NotBlank(message = "Bank Id is required")
-    private Integer bankId;
-
     @Column(name = "opening_date")
     @NotBlank(message = "Opening date is required")
     // !!! Should make validator for minDate !!!
