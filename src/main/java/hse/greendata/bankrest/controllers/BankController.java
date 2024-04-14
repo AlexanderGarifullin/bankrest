@@ -39,6 +39,12 @@ public class BankController {
         return convertToBankDTO(bankService.findOne(id));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+        bankService.delete(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
     @ExceptionHandler(BankException.class)
     public ResponseEntity<ErrorResponse> handleBankException(BankException ex) {
         ErrorResponse response = new ErrorResponse(
@@ -47,7 +53,6 @@ public class BankController {
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
 
     private Bank convertToBank(BankDTO bankDTO) {
         return modelMapper.map(bankDTO, Bank.class);
