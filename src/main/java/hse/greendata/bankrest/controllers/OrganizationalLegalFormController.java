@@ -52,6 +52,18 @@ public class OrganizationalLegalFormController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<HttpStatus> update(@ModelAttribute("person") @Valid OrganizationalLegalForm organizationalLegalForm,
+                                             BindingResult bindingResult,
+                                             @PathVariable("id") int id) {
+        if (bindingResult.hasErrors()){
+            throwException(bindingResult);
+        }
+        organizationalLegalFormService.update(id, organizationalLegalForm);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+
 
     private void throwException(BindingResult bindingResult){
         StringBuilder errorMsg = new StringBuilder();
