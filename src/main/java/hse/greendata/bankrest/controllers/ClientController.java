@@ -5,15 +5,19 @@ import hse.greendata.bankrest.dto.ClientDTO;
 import hse.greendata.bankrest.dto.OrganizationalLegalFormDTO;
 import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.models.Client;
+import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.services.ClientService;
 import hse.greendata.bankrest.util.exceptions.Bank.BankException;
+import hse.greendata.bankrest.util.exceptions.Bank.BankNotCreatedException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientException;
 import hse.greendata.bankrest.util.exceptions.ErrorMessagesBuilder;
 import hse.greendata.bankrest.util.exceptions.ErrorResponse;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,9 +39,8 @@ public class ClientController {
     }
 
     @GetMapping("")
-    public List<ClientDTO> getClients(){
-        return clientService.findAll().stream().map(this::convertToClientDTO)
-                .collect(Collectors.toList());
+    public List<Client> getClients(){
+        return clientService.findAll();
     }
 
     @GetMapping("/{id}")
@@ -45,7 +48,18 @@ public class ClientController {
         return convertToClientDTO(clientService.findOne(id));
     }
 
+    @PostMapping
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid ClientDTO clientDTO,
+                                             BindingResult bindingResult){
+//        bankValidator.validate(convertToBank(bankDTO),
+//                bindingResult);
 
+//        if (bindingResult.hasErrors()){
+//            throwException(bindingResult, BankNotCreatedException.class);
+//        }
+        clientService.save(convertToClient(clientDTO));
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
     @ExceptionHandler(ClientException.class)
     public ResponseEntity<ErrorResponse> handleClientException(ClientException ex) {
@@ -55,6 +69,20 @@ public class ClientController {
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+
+    private Client convertToClient(ClientDTO clientDTO) {
+        Client client = modelMapper.map(clientDTO, Client.class);
+
+        // Преобразование OrganizationalLegalFormDTO в OrganizationalLegalForm
+        OrganizationalLegalForm organizationalLegalForm =
+                modelMapper.map(clientDTO.getOrganizationalLegalForm(), OrganizationalLegalForm.class);
+
+        // Установка преобразованного OrganizationalLegalForm в Client
+        client.setOrganizationalLegalForm(organizationalLegalForm);
+        return client;
+    }
+
 
     private ClientDTO convertToClientDTO(Client client){
         ClientDTO clientDTO = modelMapper.map(client, ClientDTO.class);
