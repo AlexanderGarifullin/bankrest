@@ -1,4 +1,4 @@
-package hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm;
+package hse.greendata.bankrest.util.OrganizationalLegalForm.exceptions.OrganizationalLegalForm;
 
 public class OrganizationalLegalFormNotUpdatedException extends OrganizationalLegalFormException{
     public OrganizationalLegalFormNotUpdatedException(String message) {
