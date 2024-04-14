@@ -3,6 +3,7 @@ package hse.greendata.bankrest.services;
 import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.repositories.BankRepository;
+import hse.greendata.bankrest.util.exceptions.Bank.BankNotFoundException;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,12 @@ public class BankService {
 
     public List<Bank> findAll() {
         return bankRepository.findAll();
+    }
+
+    public Bank findOne(int id) {
+        Optional<Bank> foundBank = bankRepository.findById(id);
+        return foundBank.orElseThrow(() ->
+                new BankNotFoundException("Bank with id " + id + " not found"));
     }
 
     @Transactional
