@@ -28,7 +28,6 @@ public class OrganizationalLegalFormController {
     private final OrganizationalLegalFormService organizationalLegalFormService;
     private final ModelMapper modelMapper;
     private final ErrorMessagesBuilder errorMessagesBuilder;
-
     private final OrganizationalLegalFormValidator organizationalLegalFormValidator;
 
     @Autowired
