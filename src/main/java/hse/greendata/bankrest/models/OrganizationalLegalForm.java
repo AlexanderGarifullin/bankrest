@@ -1,5 +1,6 @@
 package hse.greendata.bankrest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -24,7 +25,4 @@ public class OrganizationalLegalForm {
     @NotBlank(message = "Name is required")
     @Size(min = 1, max = 100, message = "Name should be between 1 and 100 characters")
     private String name;
-
-    @OneToMany(mappedBy = "organizationalLegalForm")
-    private List<Client> clients;
 }
