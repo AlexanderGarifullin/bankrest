@@ -27,6 +27,11 @@ public class BankService {
     }
 
     @Transactional
+    public void save(Bank bank) {
+        bankRepository.save(bank);
+    }
+
+    @Transactional
     public void update(int id, Bank updatedBank) {
         updatedBank.setId(id);
         bankRepository.save(updatedBank);
