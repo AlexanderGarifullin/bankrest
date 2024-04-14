@@ -7,8 +7,12 @@ import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.services.BankService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/bank")
@@ -19,6 +23,12 @@ public class BankController {
     public BankController(BankService bankService, ModelMapper modelMapper) {
         this.bankService = bankService;
         this.modelMapper = modelMapper;
+    }
+
+    @GetMapping("")
+    public List<BankDTO> getBanks(){
+        return bankService.findAll().stream().map(this::convertToBankDTO)
+                .collect(Collectors.toList());
     }
 
     private Bank convertToBank(BankDTO bankDTO) {
