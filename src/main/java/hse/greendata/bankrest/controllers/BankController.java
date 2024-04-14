@@ -1,15 +1,13 @@
 package hse.greendata.bankrest.controllers;
 
 import hse.greendata.bankrest.dto.BankDTO;
-import hse.greendata.bankrest.dto.OrganizationalLegalFormDTO;
 import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.services.BankService;
 import hse.greendata.bankrest.util.exceptions.Bank.BankException;
 import hse.greendata.bankrest.util.exceptions.Bank.BankNotCreatedException;
+import hse.greendata.bankrest.util.exceptions.Bank.BankNotUpdatedException;
 import hse.greendata.bankrest.util.exceptions.ErrorMessagesBuilder;
 import hse.greendata.bankrest.util.exceptions.ErrorResponse;
-import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormException;
-import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotCreatedException;
 import hse.greendata.bankrest.util.validators.BankValidator;
 import jakarta.validation.Valid;
 import lombok.SneakyThrows;
@@ -59,6 +57,20 @@ public class BankController {
             throwException(bindingResult, BankNotCreatedException.class);
         }
         bankService.save(convertToBank(bankDTO));
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<HttpStatus> update(@RequestBody @Valid BankDTO bankDTO,
+                                             BindingResult bindingResult,
+                                             @PathVariable("id") int id) {
+        bankValidator.validate(convertToBank(bankDTO),
+                bindingResult);
+
+        if (bindingResult.hasErrors()){
+            throwException(bindingResult, BankNotUpdatedException.class);
+        }
+        bankService.update(id, convertToBank(bankDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
