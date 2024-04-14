@@ -43,24 +43,30 @@ public class OrganizationalLegalFormController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> creaate(@RequestBody @Valid OrganizationalLegalFormDTO organizationalLegalFormDTO,
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid OrganizationalLegalFormDTO organizationalLegalFormDTO,
                                               BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            StringBuilder errorMsg = new StringBuilder();
-
-            List<FieldError> errors = bindingResult.getFieldErrors();
-
-            for (FieldError error : errors) {
-                errorMsg.append(error.getField())
-                        .append(" - ").append(error.getDefaultMessage())
-                        .append(";");
-            }
-
-            throw new OrganizationalLegalFormNotCreatedException(errorMsg.toString());
+            throwException(bindingResult);
         }
         organizationalLegalFormService.save(convertToOrganizationalLegalForm(organizationalLegalFormDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+
+    private void throwException(BindingResult bindingResult){
+        StringBuilder errorMsg = new StringBuilder();
+
+        List<FieldError> errors = bindingResult.getFieldErrors();
+
+        for (FieldError error : errors) {
+            errorMsg.append(error.getField())
+                    .append(" - ").append(error.getDefaultMessage())
+                    .append(";");
+        }
+
+        throw new OrganizationalLegalFormNotCreatedException(errorMsg.toString());
+    }
+
 
     @ExceptionHandler
     private ResponseEntity<ErrorResponse> handleException(OrganizationalLegalFormNotFoundException e){
