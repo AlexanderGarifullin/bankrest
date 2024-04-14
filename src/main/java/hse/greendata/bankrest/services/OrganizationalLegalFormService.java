@@ -2,7 +2,7 @@ package hse.greendata.bankrest.services;
 
 import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.repositories.OrganizationalLegalFormRepository;
-import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalFormNotFoundException;
+import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm.OrganizationalLegalFormNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,8 @@ public class OrganizationalLegalFormService {
 
     public OrganizationalLegalForm findOne(int id) {
         Optional<OrganizationalLegalForm> foundOrganizationalLegalForm = organizationalLegalFormRepository.findById(id);
-        return foundOrganizationalLegalForm.orElseThrow(OrganizationalLegalFormNotFoundException::new);
+        return foundOrganizationalLegalForm.orElseThrow(() ->
+                new OrganizationalLegalFormNotFoundException("Organizational legal form with id " + id + " not found"));
     }
 
     @Transactional
