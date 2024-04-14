@@ -32,8 +32,8 @@ public class OrganizationalLegalFormService {
     }
 
     @Transactional
-    public void save(OrganizationalLegalForm person) {
-        organizationalLegalFormRepository.save(person);
+    public void save(OrganizationalLegalForm organizationalLegalForm) {
+        organizationalLegalFormRepository.save(organizationalLegalForm);
     }
 
     @Transactional

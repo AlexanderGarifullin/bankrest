@@ -4,8 +4,9 @@ import hse.greendata.bankrest.dto.OrganizationalLegalFormDTO;
 import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.services.OrganizationalLegalFormService;
 import hse.greendata.bankrest.util.OrganizationalLegalForm.ErrorResponse;
-import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalFormNotCreatedException;
-import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalFormNotFoundException;
+import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm.OrganizationalLegalFormException;
+import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm.OrganizationalLegalFormNotCreatedException;
+import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm.OrganizationalLegalFormNotFoundException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,20 +86,10 @@ public class OrganizationalLegalFormController {
         throw new OrganizationalLegalFormNotCreatedException(errorMsg.toString());
     }
 
-
-    @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleException(OrganizationalLegalFormNotFoundException e){
+    @ExceptionHandler(OrganizationalLegalFormException.class)
+    public ResponseEntity<ErrorResponse> handleOrganizationalLegalFormException(OrganizationalLegalFormException ex) {
         ErrorResponse response = new ErrorResponse(
-                "Organizational legal form with this id was not found!",
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleException(OrganizationalLegalFormNotCreatedException e){
-        ErrorResponse response = new ErrorResponse(
-                e.getMessage(),
+                ex.getMessage(),
                 System.currentTimeMillis()
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
