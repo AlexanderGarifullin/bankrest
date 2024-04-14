@@ -8,9 +8,11 @@ import hse.greendata.bankrest.util.exceptions.Bank.BankException;
 import hse.greendata.bankrest.util.exceptions.Bank.BankNotCreatedException;
 import hse.greendata.bankrest.util.exceptions.ErrorMessagesBuilder;
 import hse.greendata.bankrest.util.exceptions.ErrorResponse;
+import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormException;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotCreatedException;
 import hse.greendata.bankrest.util.validators.BankValidator;
 import jakarta.validation.Valid;
+import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,6 +60,12 @@ public class BankController {
         }
         bankService.save(convertToBank(bankDTO));
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @SneakyThrows
+    private void throwException(BindingResult bindingResult, Class<? extends BankException> exceptionClass){
+        throw exceptionClass.getDeclaredConstructor(String.class)
+                .newInstance(errorMessagesBuilder.buildErrorMessages(bindingResult));
     }
 
     @DeleteMapping("/{id}")
