@@ -42,8 +42,4 @@ public class Client {
     @NotBlank(message = "Organizational legal form is required")
     @JoinColumn(name = "organizational_legal_form_id", referencedColumnName = "id")
     private OrganizationalLegalForm organizationalLegalForm;
-
-
-    @OneToMany(mappedBy = "client")
-    private List<Deposit> deposits;
 }
