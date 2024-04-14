@@ -1,5 +1,6 @@
 package hse.greendata.bankrest;
 
+import hse.greendata.bankrest.util.exceptions.ErrorMessagesBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,4 +17,7 @@ public class BankrestApplication {
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
+
+	@Bean
+	public ErrorMessagesBuilder errorMessagesBuilder(){return new ErrorMessagesBuilder();};
 }

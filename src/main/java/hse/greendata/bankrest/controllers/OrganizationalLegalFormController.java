@@ -3,6 +3,7 @@ package hse.greendata.bankrest.controllers;
 import hse.greendata.bankrest.dto.OrganizationalLegalFormDTO;
 import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.services.OrganizationalLegalFormService;
+import hse.greendata.bankrest.util.exceptions.ErrorMessagesBuilder;
 import hse.greendata.bankrest.util.exceptions.ErrorResponse;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormException;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotCreatedException;
@@ -27,10 +28,14 @@ public class OrganizationalLegalFormController {
     private final OrganizationalLegalFormService organizationalLegalFormService;
     private final ModelMapper modelMapper;
 
+    private final ErrorMessagesBuilder errorMessagesBuilder;
+
     @Autowired
-    public OrganizationalLegalFormController(OrganizationalLegalFormService organizationalLegalFormService, ModelMapper modelMapper) {
+    public OrganizationalLegalFormController(OrganizationalLegalFormService organizationalLegalFormService,
+                                             ModelMapper modelMapper, ErrorMessagesBuilder errorMessagesBuilder) {
         this.organizationalLegalFormService = organizationalLegalFormService;
         this.modelMapper = modelMapper;
+        this.errorMessagesBuilder = errorMessagesBuilder;
     }
 
     @GetMapping("")
@@ -74,17 +79,8 @@ public class OrganizationalLegalFormController {
 
     @SneakyThrows
     private void throwException(BindingResult bindingResult, Class<? extends OrganizationalLegalFormException> exceptionClass){
-        StringBuilder errorMsg = new StringBuilder();
-
-        List<FieldError> errors = bindingResult.getFieldErrors();
-
-        for (FieldError error : errors) {
-            errorMsg.append(error.getField())
-                    .append(" - ").append(error.getDefaultMessage())
-                    .append(";");
-        }
-        OrganizationalLegalFormException exceptionInstance = exceptionClass.getDeclaredConstructor(String.class).newInstance(errorMsg.toString());
-        throw exceptionInstance;
+        throw exceptionClass.getDeclaredConstructor(String.class)
+                .newInstance(errorMessagesBuilder.buildErrorMessages(bindingResult));
     }
 
     @ExceptionHandler(OrganizationalLegalFormException.class)
