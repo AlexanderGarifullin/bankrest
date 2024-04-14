@@ -27,8 +27,6 @@ public class ClientDTO {
             message = "Address should be in this format: County, City, Index, Street, Home")
     private String address;
 
-    @ManyToOne
     @NotBlank(message = "Organizational legal form is required")
-    @JoinColumn(name = "organizational_legal_form_id", referencedColumnName = "id")
-    private OrganizationalLegalForm organizationalLegalForm;
+    private OrganizationalLegalFormDTO organizationalLegalForm;
 }
