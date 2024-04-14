@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Entity
 @Table(name = "Bank")
@@ -30,4 +32,8 @@ public class Bank {
     @Pattern(regexp = "^\\d{9}$",
             message = "BIK must be a 9-digit number")
     private String bik;
+
+
+    @OneToMany(mappedBy = "bank")
+    private List<Deposit> deposits;
 }
