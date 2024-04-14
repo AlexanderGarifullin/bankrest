@@ -37,9 +37,8 @@ public class BankController {
     }
 
     @GetMapping("")
-    public List<BankDTO> getBanks(){
-        return bankService.findAll().stream().map(this::convertToBankDTO)
-                .collect(Collectors.toList());
+    public List<Bank> getBanks(){
+        return bankService.findAll();
     }
 
     @GetMapping("/{id}")
