@@ -1,4 +1,4 @@
-package hse.greendata.bankrest.util;
+package hse.greendata.bankrest.util.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

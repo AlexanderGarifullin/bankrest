@@ -3,7 +3,7 @@ package hse.greendata.bankrest.controllers;
 import hse.greendata.bankrest.dto.OrganizationalLegalFormDTO;
 import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.services.OrganizationalLegalFormService;
-import hse.greendata.bankrest.util.ErrorResponse;
+import hse.greendata.bankrest.util.exceptions.ErrorResponse;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormException;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotCreatedException;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotUpdatedException;
