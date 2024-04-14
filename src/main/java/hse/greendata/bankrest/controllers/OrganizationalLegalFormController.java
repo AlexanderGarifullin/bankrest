@@ -40,9 +40,8 @@ public class OrganizationalLegalFormController {
     }
 
     @GetMapping("")
-    public List<OrganizationalLegalFormDTO> getOrganizationalLegalForms(){
-        return organizationalLegalFormService.findAll().stream().map(this::convertToOrganizationalLegalFormDTO)
-                .collect(Collectors.toList());
+    public List<OrganizationalLegalForm> getOrganizationalLegalForms(){
+        return organizationalLegalFormService.findAll();
     }
 
     @GetMapping("/{id}")
