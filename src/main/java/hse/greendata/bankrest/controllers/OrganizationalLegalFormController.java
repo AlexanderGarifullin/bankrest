@@ -63,6 +63,12 @@ public class OrganizationalLegalFormController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+        organizationalLegalFormService.delete(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
 
 
     private void throwException(BindingResult bindingResult){
