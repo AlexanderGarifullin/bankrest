@@ -6,6 +6,7 @@ import hse.greendata.bankrest.services.OrganizationalLegalFormService;
 import hse.greendata.bankrest.util.OrganizationalLegalForm.ErrorResponse;
 import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm.OrganizationalLegalFormException;
 import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm.OrganizationalLegalFormNotCreatedException;
+import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm.OrganizationalLegalFormNotUpdatedException;
 import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
@@ -58,7 +59,7 @@ public class OrganizationalLegalFormController {
                                              BindingResult bindingResult,
                                              @PathVariable("id") int id) {
         if (bindingResult.hasErrors()){
-            throwException(bindingResult, OrganizationalLegalFormException.class);
+            throwException(bindingResult, OrganizationalLegalFormNotUpdatedException.class);
         }
         organizationalLegalFormService.update(id, convertToOrganizationalLegalForm(organizationalLegalFormDTO));
         return ResponseEntity.ok(HttpStatus.OK);
