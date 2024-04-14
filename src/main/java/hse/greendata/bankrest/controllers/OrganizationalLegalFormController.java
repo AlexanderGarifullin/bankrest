@@ -8,6 +8,7 @@ import hse.greendata.bankrest.util.exceptions.ErrorResponse;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormException;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotCreatedException;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotUpdatedException;
+import hse.greendata.bankrest.util.validators.OrganizationalLegalFormValidator;
 import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,15 +27,17 @@ public class OrganizationalLegalFormController {
 
     private final OrganizationalLegalFormService organizationalLegalFormService;
     private final ModelMapper modelMapper;
-
     private final ErrorMessagesBuilder errorMessagesBuilder;
+
+    private final OrganizationalLegalFormValidator organizationalLegalFormValidator;
 
     @Autowired
     public OrganizationalLegalFormController(OrganizationalLegalFormService organizationalLegalFormService,
-                                             ModelMapper modelMapper, ErrorMessagesBuilder errorMessagesBuilder) {
+                                             ModelMapper modelMapper, ErrorMessagesBuilder errorMessagesBuilder, OrganizationalLegalFormValidator organizationalLegalFormValidator) {
         this.organizationalLegalFormService = organizationalLegalFormService;
         this.modelMapper = modelMapper;
         this.errorMessagesBuilder = errorMessagesBuilder;
+        this.organizationalLegalFormValidator = organizationalLegalFormValidator;
     }
 
     @GetMapping("")
@@ -52,6 +54,9 @@ public class OrganizationalLegalFormController {
     @PostMapping
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid OrganizationalLegalFormDTO organizationalLegalFormDTO,
                                               BindingResult bindingResult){
+        organizationalLegalFormValidator.validate(convertToOrganizationalLegalForm(organizationalLegalFormDTO),
+                bindingResult);
+
         if (bindingResult.hasErrors()){
             throwException(bindingResult, OrganizationalLegalFormNotCreatedException.class);
         }
@@ -63,6 +68,9 @@ public class OrganizationalLegalFormController {
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid OrganizationalLegalFormDTO organizationalLegalFormDTO,
                                              BindingResult bindingResult,
                                              @PathVariable("id") int id) {
+        organizationalLegalFormValidator.validate(convertToOrganizationalLegalForm(organizationalLegalFormDTO),
+                bindingResult);
+
         if (bindingResult.hasErrors()){
             throwException(bindingResult, OrganizationalLegalFormNotUpdatedException.class);
         }
