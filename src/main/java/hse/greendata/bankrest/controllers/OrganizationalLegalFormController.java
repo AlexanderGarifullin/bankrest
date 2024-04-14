@@ -6,8 +6,8 @@ import hse.greendata.bankrest.services.OrganizationalLegalFormService;
 import hse.greendata.bankrest.util.OrganizationalLegalForm.ErrorResponse;
 import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm.OrganizationalLegalFormException;
 import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm.OrganizationalLegalFormNotCreatedException;
-import hse.greendata.bankrest.util.OrganizationalLegalForm.exception.OrganizationalLegalForm.OrganizationalLegalFormNotFoundException;
 import jakarta.validation.Valid;
+import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,7 @@ public class OrganizationalLegalFormController {
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid OrganizationalLegalFormDTO organizationalLegalFormDTO,
                                               BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            throwException(bindingResult);
+            throwException(bindingResult, OrganizationalLegalFormNotCreatedException.class);
         }
         organizationalLegalFormService.save(convertToOrganizationalLegalForm(organizationalLegalFormDTO));
         return ResponseEntity.ok(HttpStatus.OK);
@@ -58,7 +58,7 @@ public class OrganizationalLegalFormController {
                                              BindingResult bindingResult,
                                              @PathVariable("id") int id) {
         if (bindingResult.hasErrors()){
-            throwException(bindingResult);
+            throwException(bindingResult, OrganizationalLegalFormException.class);
         }
         organizationalLegalFormService.update(id, organizationalLegalForm);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -71,8 +71,8 @@ public class OrganizationalLegalFormController {
     }
 
 
-
-    private void throwException(BindingResult bindingResult){
+    @SneakyThrows
+    private void throwException(BindingResult bindingResult, Class<? extends OrganizationalLegalFormException> exceptionClass){
         StringBuilder errorMsg = new StringBuilder();
 
         List<FieldError> errors = bindingResult.getFieldErrors();
@@ -82,8 +82,8 @@ public class OrganizationalLegalFormController {
                     .append(" - ").append(error.getDefaultMessage())
                     .append(";");
         }
-
-        throw new OrganizationalLegalFormNotCreatedException(errorMsg.toString());
+        OrganizationalLegalFormException exceptionInstance = exceptionClass.getDeclaredConstructor(String.class).newInstance(errorMsg.toString());
+        throw exceptionInstance;
     }
 
     @ExceptionHandler(OrganizationalLegalFormException.class)
