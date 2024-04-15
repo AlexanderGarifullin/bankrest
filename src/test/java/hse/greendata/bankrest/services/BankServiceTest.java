@@ -3,7 +3,11 @@ package hse.greendata.bankrest.services;
 import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.repositories.BankRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
@@ -11,12 +15,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class BankServiceTest {
 
+    @Mock
+    private BankRepository bankRepository;
+
+    @InjectMocks
+    private BankService bankService;
     @Test
     void testFindOne() {
-        BankRepository bankRepository = Mockito.mock(BankRepository.class);
-
         Bank bank = new Bank();
         bank.setId(1);
         bank.setName("Test Bank");
