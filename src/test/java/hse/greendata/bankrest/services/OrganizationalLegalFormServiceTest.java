@@ -126,5 +126,13 @@ class OrganizationalLegalFormServiceTest {
         assertEquals(id, form.getId());
     }
 
+    @Test
+    void testDelete() {
+        int id = 1;
+
+        organizationalLegalFormService.delete(id);
+
+        verify(organizationalLegalFormRepository, times(1)).deleteById(id);
+    }
 
 }
