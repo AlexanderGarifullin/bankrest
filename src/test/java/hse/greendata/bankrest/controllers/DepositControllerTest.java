@@ -1,5 +1,8 @@
 package hse.greendata.bankrest.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hse.greendata.bankrest.dto.BankDTO;
+import hse.greendata.bankrest.dto.DepositDTO;
 import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.models.Deposit;
 import hse.greendata.bankrest.repositories.BankRepository;
@@ -102,5 +105,26 @@ class DepositControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.openingDate").value("2020-03-20"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.interestRate").value(10.0))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.termMonths").value(3));
+    }
+
+    @Test
+    void testCreateDeposit() throws Exception {
+        DepositDTO depositDTO = new DepositDTO();
+
+        depositDTO.setBankId(1);
+        depositDTO.setClientId(1);
+        depositDTO.setOpeningDate(LocalDate.of(2020, 3, 20));
+        depositDTO.setInterestRate(15.2);
+        depositDTO.setTermMonths(5);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+
+        String requestBody = objectMapper.writeValueAsString(depositDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/deposit")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
