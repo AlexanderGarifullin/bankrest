@@ -85,4 +85,13 @@ class DepositServiceTest {
 
         verify(depositRepository, times(1)).findAll();
     }
+
+    @Test
+    void testSave() {
+        Deposit deposit = new Deposit(1, 1, 1 , LocalDate.of(2022,2,2),
+                15.2, 4);
+        depositService.save(deposit);
+
+        verify(depositRepository, times(1)).save(any(Deposit.class));
+    }
 }
