@@ -143,4 +143,42 @@ class ClientControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void testUpdateClient() throws Exception {
+        int id = 1;
+        ClientDTO clientDTO = new ClientDTO();
+
+        clientDTO.setName("client");
+        clientDTO.setShortName("c1");
+        clientDTO.setAddress("Россия, Москва, 117312, ул. Тверская, д. 10");
+        clientDTO.setOrganizationalLegalFormId(1);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(clientDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/client/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testUpdateClientWithEmptyName() throws Exception {
+        int id = 1;
+        ClientDTO clientDTO = new ClientDTO();
+
+        clientDTO.setName("");
+        clientDTO.setShortName("c1");
+        clientDTO.setAddress("Россия, Москва, 117312, ул. Тверская, д. 10");
+        clientDTO.setOrganizationalLegalFormId(1);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(clientDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/client/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
