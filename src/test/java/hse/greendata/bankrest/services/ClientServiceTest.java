@@ -3,6 +3,8 @@ package hse.greendata.bankrest.services;
 import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.repositories.ClientRepository;
+import hse.greendata.bankrest.util.exceptions.Bank.BankNotFoundException;
+import hse.greendata.bankrest.util.exceptions.Client.ClientNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,6 +44,17 @@ class ClientServiceTest {
         assertEquals(client.getShortName(), result.getShortName());
         assertEquals(client.getAddress(), result.getAddress());
         assertEquals(client.getOrganizationalLegalFormId(), result.getOrganizationalLegalFormId());
+
+        verify(clientRepository).findById(1);
+    }
+
+    @Test
+    void testFindOne_WhenClientNotExists_ThrowException() {
+        when(clientRepository.findById(1)).thenReturn(Optional.empty());
+
+        assertThrows(ClientNotFoundException.class, () -> {
+            clientService.findOne(1);
+        });
 
         verify(clientRepository).findById(1);
     }
