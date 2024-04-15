@@ -10,11 +10,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BankServiceTest {
@@ -49,8 +49,30 @@ class BankServiceTest {
         assertThrows(BankNotFoundException.class, () -> {
             bankService.findOne(1);
         });
+
+        verify(bankRepository).findById(1);
     }
 
+    @Test
+    void testFindAll_WhenBanksExists_ReturnListOfBanks() {
+        Bank bank = new Bank(1, "bank", "123456789");
+        List<Bank> expectedBanks = List.of(bank);
+
+        when(bankRepository.findAll()).thenReturn(expectedBanks);
+
+        List<Bank> actualBanks = bankService.findAll();
+
+        assertEquals(expectedBanks.size(), actualBanks.size());
+        for (int i = 0; i < expectedBanks.size(); i++) {
+            Bank bank1 = expectedBanks.get(i);
+            Bank bank2 = actualBanks.get(i);
+            assertEquals(bank1.getId(), bank2.getId());
+            assertEquals(bank1.getName(), bank2.getName());
+            assertEquals(bank1.getBik(), bank2.getBik());
+        }
+
+        verify(bankRepository, times(1)).findAll();
+    }
 
 
 }
