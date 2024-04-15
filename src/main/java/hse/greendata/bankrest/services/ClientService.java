@@ -45,4 +45,10 @@ public class ClientService {
     public void save(Client client) {
         clientRepository.save(client);
     }
+
+    @Transactional
+    public void update(int id, Client updatedClient) {
+        updatedClient.setId(id);
+        clientRepository.save(updatedClient);
+    }
 }
