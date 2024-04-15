@@ -117,6 +117,13 @@ class BankServiceTest {
         assertEquals(bank.getBik(), b.getBik());
     }
 
+    @Test
+    void testSave() {
+        Bank bank = new Bank(1, "bank", "123456789");
 
+        bankService.save(bank);
+
+        verify(bankRepository, times(1)).save(any(Bank.class));
+    }
 
 }
