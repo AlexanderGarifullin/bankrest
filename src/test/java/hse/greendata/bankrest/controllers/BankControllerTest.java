@@ -56,4 +56,21 @@ class BankControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Bank 2"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].bik").value("987654321"));
     }
+
+    @Test
+    void testGetBanksById() throws Exception{
+        Bank bank = new Bank(1, "Bank 1", "123456789");
+
+        when(service.findOne(1)).thenReturn(bank);
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/bank/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Bank 1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.bik").value("123456789"));
+    }
+
+
+
 }
