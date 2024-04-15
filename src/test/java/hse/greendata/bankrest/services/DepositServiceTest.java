@@ -94,4 +94,16 @@ class DepositServiceTest {
 
         verify(depositRepository, times(1)).save(any(Deposit.class));
     }
+
+    @Test
+    void testUpdate() {
+        int id = 1;
+        Deposit deposit = new Deposit(1, 1, 1 , LocalDate.of(2022,2,2),
+                15.2, 4);
+        depositService.update(id, deposit);
+
+        verify(depositRepository, times(1)).save(deposit);
+
+        assertEquals(id, deposit.getId());
+    }
 }
