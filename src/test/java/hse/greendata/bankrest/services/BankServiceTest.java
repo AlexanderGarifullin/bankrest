@@ -2,6 +2,7 @@ package hse.greendata.bankrest.services;
 
 import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.repositories.BankRepository;
+import hse.greendata.bankrest.util.exceptions.Bank.BankIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.Bank.BankNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -71,6 +72,13 @@ class BankServiceTest {
         }
 
         verify(bankRepository, times(1)).findAll(Sort.by("id"));
+    }
+
+    @Test
+    void testFindAll_WithIllegalParameter_ReturnIllegalSortArgumentExectpion() {
+        assertThrows(BankIllegalSortArgument.class, () -> {
+            bankService.findAll("invalidField");
+        });
     }
 
     @Test
