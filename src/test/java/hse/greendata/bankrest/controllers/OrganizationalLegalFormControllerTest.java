@@ -1,6 +1,7 @@
 package hse.greendata.bankrest.controllers;
 
 import hse.greendata.bankrest.models.OrganizationalLegalForm;
+import hse.greendata.bankrest.repositories.OrganizationalLegalFormRepository;
 import hse.greendata.bankrest.services.OrganizationalLegalFormService;
 import hse.greendata.bankrest.util.validators.OrganizationalLegalFormValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(OrganizationalLegalFormController.class)
@@ -29,6 +31,9 @@ class OrganizationalLegalFormControllerTest {
 
     @MockBean
     private OrganizationalLegalFormService service;
+
+    @MockBean
+    private OrganizationalLegalFormRepository repository;
 
     @MockBean
     private OrganizationalLegalFormValidator validator;
@@ -75,6 +80,18 @@ class OrganizationalLegalFormControllerTest {
     }
 
     @Test
-    void delete() {
-    }
+    void testDelete() throws Exception{
+        int idToDelete = 1;
+
+        OrganizationalLegalForm formToDelete = new OrganizationalLegalForm(idToDelete, "Form to delete");
+        List<OrganizationalLegalForm> forms = List.of(formToDelete);
+
+        when(service.findAll()).thenReturn(forms);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/olf/{id}", idToDelete)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(service).delete(idToDelete);
+      }
 }
