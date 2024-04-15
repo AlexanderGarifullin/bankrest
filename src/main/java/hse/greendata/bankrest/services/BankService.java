@@ -39,6 +39,10 @@ public class BankService {
         return bankRepository.findByBik(bik);
     }
 
+    public Optional<Bank> findOneById(int id) {
+        return bankRepository.findById(id);
+    }
+
     @Transactional
     public void save(Bank bank) {
         bankRepository.save(bank);

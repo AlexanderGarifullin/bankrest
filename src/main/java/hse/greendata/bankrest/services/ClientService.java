@@ -41,6 +41,10 @@ public class ClientService {
         return clientRepository.findByShortName(shortName);
     }
 
+    public Optional<Client> findOneById(int id) {
+        return clientRepository.findById(id);
+    }
+
     @Transactional
     public void save(Client client) {
         clientRepository.save(client);
