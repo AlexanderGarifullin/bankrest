@@ -1,7 +1,8 @@
 package hse.greendata.bankrest.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hse.greendata.bankrest.dto.BankDTO;
 import hse.greendata.bankrest.models.Bank;
-import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.repositories.BankRepository;
 import hse.greendata.bankrest.services.BankService;
 import hse.greendata.bankrest.util.validators.BankValidator;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,6 +73,79 @@ class BankControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.bik").value("123456789"));
     }
 
+    @Test
+    void testCreateBank() throws Exception {
+        BankDTO bankDTO = new BankDTO();
 
+        bankDTO.setName("Test Bank");
+        bankDTO.setBik("123456789");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(bankDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/bank")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testCreateBankWithEmptyName() throws Exception {
+        BankDTO bankDTO = new BankDTO();
+
+        bankDTO.setName("");
+        bankDTO.setBik("123456789");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(bankDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/bank")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testUpdateBank() throws Exception {
+        int id = 1;
+        BankDTO bankDTO = new BankDTO();
+        bankDTO.setName("Bank");
+        bankDTO.setBik("123456789");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(bankDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/bank/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testUpdateBankWithEmptyName() throws Exception {
+        int id = 1;
+        BankDTO bankDTO = new BankDTO();
+        bankDTO.setName("");
+        bankDTO.setBik("123456789");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(bankDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/bank/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testDeleteBank() throws Exception{
+        int idToDelete = 1;
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/bank/{id}", idToDelete)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(service).delete(idToDelete);
+    }
 
 }
