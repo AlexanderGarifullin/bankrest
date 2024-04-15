@@ -2,6 +2,7 @@ package hse.greendata.bankrest.services;
 
 import hse.greendata.bankrest.models.Deposit;
 import hse.greendata.bankrest.repositories.DepositRepository;
+import hse.greendata.bankrest.util.exceptions.Deposit.DepositIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.Deposit.DepositNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,6 +84,13 @@ class DepositServiceTest {
         }
 
         verify(depositRepository, times(1)).findAll(Sort.by("id"));
+    }
+
+    @Test
+    void testFindAll_WithIllegalParameter_ReturnIllegalSortArgumentExectpion() {
+        assertThrows(DepositIllegalSortArgument.class, () -> {
+            depositService.findAll("invalidField");
+        });
     }
 
     @Test
