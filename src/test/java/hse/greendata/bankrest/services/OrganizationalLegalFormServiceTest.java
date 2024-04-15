@@ -11,11 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrganizationalLegalFormServiceTest {
@@ -52,6 +52,26 @@ class OrganizationalLegalFormServiceTest {
         });
 
         verify(organizationalLegalFormRepository).findById(1);
+    }
+
+    @Test
+    void testFindAll_WhenFormsExists_ReturnListOfForms() {
+        OrganizationalLegalForm form = new OrganizationalLegalForm(1, "form");
+        List<OrganizationalLegalForm> expectedForms = List.of(form);
+
+        when(organizationalLegalFormRepository.findAll()).thenReturn(expectedForms);
+
+        List<OrganizationalLegalForm> actualForms = organizationalLegalFormService.findAll();
+
+        assertEquals(expectedForms.size(), actualForms.size());
+        for (int i = 0; i < expectedForms.size(); i++) {
+            OrganizationalLegalForm form1 = expectedForms.get(i);
+            OrganizationalLegalForm form2 = expectedForms.get(i);
+            assertEquals(form1.getId(), form2.getId());
+            assertEquals(form1.getName(), form2.getName());
+        }
+
+        verify(organizationalLegalFormRepository, times(1)).findAll();
     }
 
 }
