@@ -29,6 +29,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -191,5 +192,14 @@ class DepositControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void testDeleteDeposit() throws Exception{
+        int idToDelete = 1;
 
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deposit/{id}", idToDelete)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(service).delete(idToDelete);
+    }
 }
