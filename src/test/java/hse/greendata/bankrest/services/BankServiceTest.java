@@ -132,4 +132,17 @@ class BankServiceTest {
         verify(bankRepository, times(1)).save(any(Bank.class));
     }
 
+    @Test
+    void testUpdate() {
+        int id = 1;
+        Bank bank = new Bank(2, "bank", "123456789");
+
+        bankService.update(id, bank);
+
+        verify(bankRepository, times(1)).save(bank);
+
+        assertEquals(id, bank.getId());
+
+    }
+
 }
