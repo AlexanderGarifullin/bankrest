@@ -33,4 +33,8 @@ public class ClientService {
                 new ClientNotFoundException("Client with id " + id + " not found"));
     }
 
+    @Transactional
+    public void save(Client client) {
+        clientRepository.save(client);
+    }
 }
