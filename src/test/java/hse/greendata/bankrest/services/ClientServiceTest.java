@@ -1,9 +1,7 @@
 package hse.greendata.bankrest.services;
 
-import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.repositories.ClientRepository;
-import hse.greendata.bankrest.util.exceptions.Bank.BankNotFoundException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.ref.Cleaner;
 import java.util.List;
 import java.util.Optional;
 
@@ -162,5 +159,12 @@ class ClientServiceTest {
         assertEquals(id, client.getId());
     }
 
+    @Test
+    void testDelete() {
+        int id = 1;
 
+        clientService.delete(id);
+
+        verify(clientRepository, times(1)).deleteById(id);
+    }
 }
