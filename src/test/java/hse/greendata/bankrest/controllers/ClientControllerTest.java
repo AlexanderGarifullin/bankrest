@@ -1,9 +1,7 @@
 package hse.greendata.bankrest.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hse.greendata.bankrest.dto.BankDTO;
 import hse.greendata.bankrest.dto.ClientDTO;
-import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.repositories.ClientRepository;
 import hse.greendata.bankrest.repositories.OrganizationalLegalFormRepository;
