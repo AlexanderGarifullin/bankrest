@@ -51,4 +51,9 @@ public class ClientService {
         updatedClient.setId(id);
         clientRepository.save(updatedClient);
     }
+
+    @Transactional
+    public void delete(int id) {
+        clientRepository.deleteById(id);
+    }
 }
