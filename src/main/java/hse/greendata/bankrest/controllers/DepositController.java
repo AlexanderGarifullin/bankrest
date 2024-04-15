@@ -5,13 +5,15 @@ import hse.greendata.bankrest.dto.DepositDTO;
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.models.Deposit;
 import hse.greendata.bankrest.services.DepositService;
+import hse.greendata.bankrest.util.exceptions.Client.ClientException;
+import hse.greendata.bankrest.util.exceptions.Deposit.DepositException;
 import hse.greendata.bankrest.util.exceptions.ErrorMessagesBuilder;
+import hse.greendata.bankrest.util.exceptions.ErrorResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,6 +39,16 @@ public class DepositController {
     public DepositDTO getClients(@PathVariable("id") int id){
         return convertToDepositDTO(depositService.findOne(id));
     }
+
+    @ExceptionHandler(DepositException.class)
+    public ResponseEntity<ErrorResponse> handleDepositException(DepositException ex) {
+        ErrorResponse response = new ErrorResponse(
+                ex.getMessage(),
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
     private DepositDTO convertToDepositDTO(Deposit deposit){
         return modelMapper.map(deposit, DepositDTO.class);
