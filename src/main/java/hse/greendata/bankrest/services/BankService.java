@@ -1,9 +1,12 @@
 package hse.greendata.bankrest.services;
 
-import hse.greendata.bankrest.models.Bank;
+import hse.greendata.bankrest.models.Bank;;
 import hse.greendata.bankrest.repositories.BankRepository;
+import hse.greendata.bankrest.util.exceptions.Bank.BankIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.Bank.BankNotFoundException;
+import hse.greendata.bankrest.util.reflections.ReflectionFields;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +24,11 @@ public class BankService {
         this.bankRepository = bankRepository;
     }
 
-    public List<Bank> findAll() {
-        return bankRepository.findAll();
+    public List<Bank> findAll(String sort) {
+        if (ReflectionFields.hasField(Bank.class, sort))  {
+            return bankRepository.findAll(Sort.by(sort));
+        }
+        throw new BankIllegalSortArgument("Field " + sort + " does not exist in OrganizationalLegalForm class");
     }
 
     public Bank findOne(int id) {
