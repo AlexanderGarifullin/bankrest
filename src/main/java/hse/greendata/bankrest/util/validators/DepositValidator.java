@@ -10,18 +10,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Component
 public class DepositValidator implements Validator {
 
-    private final DepositService depositService;
     private final ClientService clientService;
     private final BankService bankService;
 
     @Autowired
-    public DepositValidator(DepositService depositService, ClientService clientService, BankService bankService) {
-        this.depositService = depositService;
+    public DepositValidator(ClientService clientService, BankService bankService) {
         this.clientService = clientService;
         this.bankService = bankService;
     }
@@ -45,8 +44,7 @@ public class DepositValidator implements Validator {
                     "there is no such Bank");
         }
 
-        Date comparisonDate = new Date(2000, 1, 1);
-        if (comparisonDate.compareTo(deposit.getOpeningDate()) >= 0) {
+        if (deposit.getOpeningDate().compareTo(LocalDate.of(2000, 1, 1)) <= 0) {
             errors.rejectValue("openingDate", "",
                     "openingDate should be after 2000-01-01");
         }
