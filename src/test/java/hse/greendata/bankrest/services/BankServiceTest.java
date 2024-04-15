@@ -142,7 +142,14 @@ class BankServiceTest {
         verify(bankRepository, times(1)).save(bank);
 
         assertEquals(id, bank.getId());
-
     }
 
+    @Test
+    void testDelete() {
+        int id = 1;
+
+        bankService.delete(id);
+
+        verify(bankRepository, times(1)).deleteById(id);
+    }
 }
