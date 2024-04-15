@@ -121,4 +121,23 @@ class ClientServiceTest {
 
         verify(clientRepository, times(1)).findByShortName(client.getShortName());
     }
+
+    @Test
+    void testFindOneById_WhenClientExist_ReturnClient() {
+        Client client = new Client(1, "Client", "c",
+                "Россия, Москва, 117312, ул. Тверская, д. 10", 1);
+        when(clientRepository.findById(client.getId())).thenReturn(Optional.of(client));
+
+        Optional<Client> result = clientService.findOneById(client.getId());
+
+        assert(result.isPresent());
+        Client client2 = result.orElse(null);
+        assertEquals(client.getId(), client2.getId());
+        assertEquals(client.getName(), client2.getName());
+        assertEquals(client.getShortName(), client2.getShortName());
+        assertEquals(client.getAddress(), client2.getAddress());
+        assertEquals(client.getOrganizationalLegalFormId(), client2.getOrganizationalLegalFormId());
+
+        verify(clientRepository, times(1)).findById(client.getId());
+    }
 }
