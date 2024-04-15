@@ -169,4 +169,27 @@ class DepositControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void testUpdateDepositWithEmptyTermMonth() throws Exception {
+        int id = 1;
+        DepositDTO depositDTO = new DepositDTO();
+        depositDTO.setBankId(1);
+        depositDTO.setClientId(1);
+        depositDTO.setOpeningDate(LocalDate.of(2020, 3, 20));
+        depositDTO.setInterestRate(4.8);
+        depositDTO.setTermMonths(null);;
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+
+        String requestBody = objectMapper.writeValueAsString(depositDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/deposit/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
 }
