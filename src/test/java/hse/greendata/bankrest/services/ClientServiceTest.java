@@ -2,6 +2,7 @@ package hse.greendata.bankrest.services;
 
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.repositories.ClientRepository;
+import hse.greendata.bankrest.util.exceptions.Client.ClientIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.Client.ClientNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +46,13 @@ class ClientServiceTest {
         assertEquals(client.getOrganizationalLegalFormId(), result.getOrganizationalLegalFormId());
 
         verify(clientRepository).findById(1);
+    }
+
+    @Test
+    void testFindAll_WithIllegalParameter_ReturnIllegalSortArgumentExectpion() {
+        assertThrows(ClientIllegalSortArgument.class, () -> {
+            clientService.findAll("invalidField");
+        });
     }
 
     @Test
