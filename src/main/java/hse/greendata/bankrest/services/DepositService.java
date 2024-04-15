@@ -1,9 +1,13 @@
 package hse.greendata.bankrest.services;
 
+import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.models.Deposit;
 import hse.greendata.bankrest.repositories.DepositRepository;
+import hse.greendata.bankrest.util.exceptions.Deposit.DepositIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.Deposit.DepositNotFoundException;
+import hse.greendata.bankrest.util.reflections.ReflectionFields;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +25,11 @@ public class DepositService {
         this.depositRepository = depositRepository;
     }
 
-    public List<Deposit> findAll() {
-        return depositRepository.findAll();
+    public List<Deposit> findAll(String sort) {
+        if (ReflectionFields.hasField(Deposit.class, sort)) {
+            return depositRepository.findAll(Sort.by(sort));
+        }
+        throw new DepositIllegalSortArgument("Field " + sort + " does not exist in OrganizationalLegalForm class");
     }
     public Deposit findOne(int id) {
         Optional<Deposit> foundDeposit = depositRepository.findById(id);
