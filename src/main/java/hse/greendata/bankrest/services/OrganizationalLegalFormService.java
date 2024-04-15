@@ -35,6 +35,10 @@ public class OrganizationalLegalFormService {
         return organizationalLegalFormRepository.findByName(name);
     }
 
+    public Optional<OrganizationalLegalForm> findById(int id) {
+        return organizationalLegalFormRepository.findById(id);
+    }
+
     @Transactional
     public void save(OrganizationalLegalForm organizationalLegalForm) {
         organizationalLegalFormRepository.save(organizationalLegalForm);
