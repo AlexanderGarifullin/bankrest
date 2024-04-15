@@ -1,5 +1,8 @@
 package hse.greendata.bankrest.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hse.greendata.bankrest.dto.BankDTO;
+import hse.greendata.bankrest.dto.ClientDTO;
 import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.repositories.ClientRepository;
@@ -103,5 +106,41 @@ class ClientControllerTest {
                         .value("Россия, Москва, 117312, ул. Тверская, д. 10"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.organizationalLegalFormId")
                         .value(1));
+    }
+
+    @Test
+    void testCreateClient() throws Exception {
+        ClientDTO clientDTO = new ClientDTO();
+
+        clientDTO.setName("client1");
+        clientDTO.setShortName("c1");
+        clientDTO.setAddress("Россия, Москва, 117312, ул. Тверская, д. 10");
+        clientDTO.setOrganizationalLegalFormId(1);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(clientDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/client")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testCreateClientWithEmptyName() throws Exception {
+        ClientDTO clientDTO = new ClientDTO();
+
+        clientDTO.setName("");
+        clientDTO.setShortName("c1");
+        clientDTO.setAddress("Россия, Москва, 117312, ул. Тверская, д. 10");
+        clientDTO.setOrganizationalLegalFormId(1);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(clientDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/client")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }
