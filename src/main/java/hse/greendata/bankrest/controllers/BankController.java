@@ -36,8 +36,11 @@ public class BankController {
     }
 
     @GetMapping("")
-    public List<Bank> getBanks(){
-        return bankService.findAll();
+    public List<Bank> getBanks(@RequestParam(required = false) String sort){
+        if (sort == null) {
+            sort = "id";
+        }
+        return bankService.findAll(sort);
     }
 
     @GetMapping("/{id}")
