@@ -3,15 +3,12 @@ package hse.greendata.bankrest.util.validators;
 import hse.greendata.bankrest.models.Deposit;
 import hse.greendata.bankrest.services.BankService;
 import hse.greendata.bankrest.services.ClientService;
-import hse.greendata.bankrest.services.DepositService;
-import jakarta.persistence.Column;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Component
 public class DepositValidator implements Validator {

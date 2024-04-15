@@ -1,12 +1,9 @@
 package hse.greendata.bankrest.controllers;
 
-import hse.greendata.bankrest.dto.BankDTO;
 import hse.greendata.bankrest.dto.ClientDTO;
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.services.ClientService;
 import hse.greendata.bankrest.services.OrganizationalLegalFormService;
-import hse.greendata.bankrest.util.exceptions.Bank.BankException;
-import hse.greendata.bankrest.util.exceptions.Bank.BankNotUpdatedException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientNotCreatedException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientNotUpdatedException;

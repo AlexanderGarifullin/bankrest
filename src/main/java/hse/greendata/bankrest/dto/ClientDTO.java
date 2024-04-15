@@ -1,20 +1,14 @@
 package hse.greendata.bankrest.dto;
 
-import hse.greendata.bankrest.models.OrganizationalLegalForm;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 public class ClientDTO {
     @NotBlank(message = "Name is required")
     @Size(min = 1, max = 255, message = "Name should be between 1 and 255 characters")

@@ -1,9 +1,7 @@
 package hse.greendata.bankrest.services;
 
-import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.repositories.ClientRepository;
-import hse.greendata.bankrest.util.exceptions.Bank.BankNotFoundException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
