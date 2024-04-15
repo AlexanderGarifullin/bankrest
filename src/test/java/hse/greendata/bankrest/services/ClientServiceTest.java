@@ -140,4 +140,15 @@ class ClientServiceTest {
 
         verify(clientRepository, times(1)).findById(client.getId());
     }
+
+    @Test
+    void testSave() {
+        Client client = new Client(1, "Client", "c",
+                "Россия, Москва, 117312, ул. Тверская, д. 10", 1);
+        clientService.save(client);
+
+        verify(clientRepository, times(1)).save(any(Client.class));
+    }
+
+
 }
