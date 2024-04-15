@@ -1,13 +1,12 @@
 package hse.greendata.bankrest.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hse.greendata.bankrest.dto.OrganizationalLegalFormDTO;
 import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.repositories.OrganizationalLegalFormRepository;
 import hse.greendata.bankrest.services.OrganizationalLegalFormService;
 import hse.greendata.bankrest.util.validators.OrganizationalLegalFormValidator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,13 +14,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.mockito.Mockito.*;;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrganizationalLegalFormController.class)
 class OrganizationalLegalFormControllerTest {
@@ -49,7 +47,7 @@ class OrganizationalLegalFormControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/olf")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(2))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Form 1"))
@@ -67,16 +65,66 @@ class OrganizationalLegalFormControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/olf/1")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(expectedJsonResponse));
     }
 
     @Test
-    void create() {
+    void testCreateOrganizationalLegalForm() throws Exception {
+        OrganizationalLegalFormDTO formDTO = new OrganizationalLegalFormDTO();
+        formDTO.setName("Test Form");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(formDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/olf")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void update() {
+    void testCreateOrganizationalLegalFormWithEmptyName() throws Exception {
+        OrganizationalLegalFormDTO formDTO = new OrganizationalLegalFormDTO();
+        formDTO.setName("");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(formDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/olf")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testUpdateOrganizationalLegalForm() throws Exception {
+        int id = 1;
+        OrganizationalLegalFormDTO formDTO = new OrganizationalLegalFormDTO();
+        formDTO.setName("Updated Form");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(formDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/olf/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testUpdateOrganizationalLegalFormWithEmptyName() throws Exception {
+        int id = 1;
+        OrganizationalLegalFormDTO formDTO = new OrganizationalLegalFormDTO();
+        formDTO.setName("");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(formDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/olf/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -90,7 +138,7 @@ class OrganizationalLegalFormControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/olf/{id}", idToDelete)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk());
 
         verify(service).delete(idToDelete);
       }
