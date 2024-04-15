@@ -16,13 +16,19 @@ import hse.greendata.bankrest.util.exceptions.ErrorResponse;
 import hse.greendata.bankrest.util.validators.DepositValidator;
 import jakarta.validation.Valid;
 import lombok.SneakyThrows;
+import org.modelmapper.AbstractConverter;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -59,6 +65,11 @@ public class DepositController {
         if (bindingResult.hasErrors()){
             throwException(bindingResult, DepositNotCreatedException.class);
         }
+
+        System.out.println(depositDTO);
+
+        System.out.println(convertToDeposit(depositDTO));
+
         depositService.save(convertToDeposit(depositDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -73,6 +84,8 @@ public class DepositController {
         if (bindingResult.hasErrors()){
             throwException(bindingResult, DepositNotUpdatedException.class);
         }
+
+
         depositService.update(id, convertToDeposit(depositDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -99,7 +112,13 @@ public class DepositController {
     }
 
     private Deposit convertToDeposit(DepositDTO depositDTO) {
-        return modelMapper.map(depositDTO, Deposit.class);
+        Deposit deposit = new Deposit();
+        deposit.setOpeningDate(depositDTO.getOpeningDate());
+        deposit.setInterestRate(depositDTO.getInterestRate());
+        deposit.setTermMonths(depositDTO.getTermMonths());
+        deposit.setBankId(depositDTO.getBankId());
+        deposit.setClientId(depositDTO.getClientId());
+        return deposit;
     }
 
     private DepositDTO convertToDepositDTO(Deposit deposit){
