@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.ref.Cleaner;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,5 +82,24 @@ class ClientServiceTest {
         }
 
         verify(clientRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testFindOneByName_WhenClientExist_ReturnClient() {
+        Client client = new Client(1, "Client", "c",
+                "Россия, Москва, 117312, ул. Тверская, д. 10", 1);
+        when(clientRepository.findByName(client.getName())).thenReturn(Optional.of(client));
+
+        Optional<Client> result = clientService.findOneByName(client.getName());
+
+        assert(result.isPresent());
+        Client client2 = result.orElse(null);
+        assertEquals(client.getId(), client2.getId());
+        assertEquals(client.getName(), client2.getName());
+        assertEquals(client.getShortName(), client2.getShortName());
+        assertEquals(client.getAddress(), client2.getAddress());
+        assertEquals(client.getOrganizationalLegalFormId(), client2.getOrganizationalLegalFormId());
+
+        verify(clientRepository, times(1)).findByName(client.getName());
     }
 }
