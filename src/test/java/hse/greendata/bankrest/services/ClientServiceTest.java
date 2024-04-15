@@ -11,11 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ClientServiceTest {
@@ -57,5 +57,29 @@ class ClientServiceTest {
         });
 
         verify(clientRepository).findById(1);
+    }
+
+    @Test
+    void testFindAll_WhenClientsExist_ReturnListOfClients() {
+        Client client = new Client(1, "Client", "c",
+                "Россия, Москва, 117312, ул. Тверская, д. 10", 1);
+        List<Client> expectedClients = List.of(client);
+
+        when(clientRepository.findAll()).thenReturn(expectedClients);
+
+        List<Client> actualClients = clientService.findAll();
+
+        assertEquals(expectedClients.size(), actualClients.size());
+        for (int i = 0; i < expectedClients.size(); i++) {
+            Client client1 = expectedClients.get(i);
+            Client client2 = actualClients.get(i);
+            assertEquals(client1.getId(), client2.getId());
+            assertEquals(client1.getName(), client2.getName());
+            assertEquals(client1.getShortName(), client2.getShortName());
+            assertEquals(client1.getAddress(), client2.getAddress());
+            assertEquals(client1.getOrganizationalLegalFormId(), client2.getOrganizationalLegalFormId());
+        }
+
+        verify(clientRepository, times(1)).findAll();
     }
 }
