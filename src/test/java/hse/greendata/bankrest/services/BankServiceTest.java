@@ -87,6 +87,8 @@ class BankServiceTest {
         assertEquals(bank.getId(),b.getId());
         assertEquals(bank.getName(), b.getName());
         assertEquals(bank.getBik(), b.getBik());
+
+        verify(bankRepository, times(1)).findByName(bank.getName());
     }
 
     @Test
@@ -101,6 +103,8 @@ class BankServiceTest {
         assertEquals(bank.getId(),b.getId());
         assertEquals(bank.getName(), b.getName());
         assertEquals(bank.getBik(), b.getBik());
+
+        verify(bankRepository, times(1)).findByBik(bank.getBik());
     }
 
     @Test
@@ -115,6 +119,8 @@ class BankServiceTest {
         assertEquals(bank.getId(),b.getId());
         assertEquals(bank.getName(), b.getName());
         assertEquals(bank.getBik(), b.getBik());
+
+        verify(bankRepository, times(1)).findById(bank.getId());
     }
 
     @Test
