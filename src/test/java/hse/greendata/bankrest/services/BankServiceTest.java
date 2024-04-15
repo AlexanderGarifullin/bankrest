@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,5 +75,18 @@ class BankServiceTest {
         verify(bankRepository, times(1)).findAll();
     }
 
+    @Test
+    void testFindOneByName_WhenBankExist_ReturnBank() {
+        Bank bank = new Bank(1, "bank", "123456789");
+        when(bankRepository.findByName(bank.getName())).thenReturn(Optional.of(bank));
+
+        Optional<Bank> result = bankService.findOneByName(bank.getName());
+
+        assert(result.isPresent());
+        Bank b = result.orElse(null);
+        assertEquals(bank.getId(),b.getId());
+        assertEquals(bank.getName(), b.getName());
+        assertEquals(bank.getBik(), b.getBik());
+    }
 
 }
