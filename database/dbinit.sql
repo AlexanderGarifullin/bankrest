@@ -29,7 +29,7 @@ create table if not exists Deposit  (
     client_id int not null references client(id) on delete cascade,
     bank_id int not null references bank(id) on delete cascade,
     opening_date date not null check (opening_date > '2000-01-01'),
-    interest_rate decimal(5,2) not null check (interest_rate > 0),
+    interest_rate decimal(5,2) not null check (interest_rate >= 1),
     term_months int not null check (interest_rate > 0)
 );
 
