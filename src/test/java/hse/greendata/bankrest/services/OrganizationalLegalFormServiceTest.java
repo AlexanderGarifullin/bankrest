@@ -89,4 +89,20 @@ class OrganizationalLegalFormServiceTest {
         verify(organizationalLegalFormRepository, times(1)).findByName(form.getName());
     }
 
+    @Test
+    void testFindOneById_WhenFormExist_ReturnForm() {
+        OrganizationalLegalForm form = new OrganizationalLegalForm(1, "form");
+        when(organizationalLegalFormRepository.findById(form.getId())).thenReturn(Optional.of(form));
+
+        Optional<OrganizationalLegalForm> result = organizationalLegalFormService.findById(form.getId());
+
+        assert(result.isPresent());
+        OrganizationalLegalForm b = result.orElse(null);
+        assertEquals(form.getId(),b.getId());
+        assertEquals(form.getName(), b.getName());
+
+        verify(organizationalLegalFormRepository, times(1)).findById(form.getId());
+    }
+
+
 }
