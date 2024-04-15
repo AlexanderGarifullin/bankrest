@@ -114,5 +114,17 @@ class OrganizationalLegalFormServiceTest {
                 .save(any(OrganizationalLegalForm.class));
     }
 
+    @Test
+    void testUpdate() {
+        int id = 1;
+        OrganizationalLegalForm form = new OrganizationalLegalForm(2, "form");
+
+        organizationalLegalFormService.update(id, form);
+
+        verify(organizationalLegalFormRepository, times(1)).save(form);
+
+        assertEquals(id, form.getId());
+    }
+
 
 }
