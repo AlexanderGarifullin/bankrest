@@ -2,6 +2,7 @@ package hse.greendata.bankrest.services;
 
 import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.repositories.OrganizationalLegalFormRepository;
+import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -71,6 +72,14 @@ class OrganizationalLegalFormServiceTest {
         }
 
         verify(organizationalLegalFormRepository, times(1)).findAll(Sort.by("id"));
+    }
+
+
+    @Test
+    void testFindAll_WithIllegalParameter_ReturnIllegalSortArgumentExectpion() {
+        assertThrows(OrganizationalLegalFormIllegalSortArgument.class, () -> {
+            organizationalLegalFormService.findAll("invalidField");
+        });
     }
 
     @Test
