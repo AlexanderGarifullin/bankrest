@@ -5,12 +5,15 @@ import hse.greendata.bankrest.dto.DepositDTO;
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.models.Deposit;
 import hse.greendata.bankrest.services.DepositService;
+import hse.greendata.bankrest.util.exceptions.Client.ClientException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientNotCreatedException;
 import hse.greendata.bankrest.util.exceptions.Deposit.DepositException;
+import hse.greendata.bankrest.util.exceptions.Deposit.DepositNotCreatedException;
 import hse.greendata.bankrest.util.exceptions.ErrorMessagesBuilder;
 import hse.greendata.bankrest.util.exceptions.ErrorResponse;
 import hse.greendata.bankrest.util.validators.DepositValidator;
 import jakarta.validation.Valid;
+import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,7 +55,7 @@ public class DepositController {
                 bindingResult);
 
         if (bindingResult.hasErrors()){
-            throwException(bindingResult, ClientNotCreatedException.class);
+            throwException(bindingResult, DepositNotCreatedException.class);
         }
         depositDTO.save(convertToDeposit(depositDTO));
         return ResponseEntity.ok(HttpStatus.OK);
@@ -64,7 +67,11 @@ public class DepositController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-
+    @SneakyThrows
+    private void throwException(BindingResult bindingResult, Class<? extends DepositException> exceptionClass){
+        throw exceptionClass.getDeclaredConstructor(String.class)
+                .newInstance(errorMessagesBuilder.buildErrorMessages(bindingResult));
+    }
 
     @ExceptionHandler(DepositException.class)
     public ResponseEntity<ErrorResponse> handleDepositException(DepositException ex) {
