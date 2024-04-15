@@ -12,11 +12,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DepositServiceTest {
@@ -59,5 +59,30 @@ class DepositServiceTest {
         });
 
         verify(depositRepository).findById(1);
+    }
+
+    @Test
+    void testFindAll_WhenDepositsExist_ReturnListOfDeposits() {
+        Deposit deposit = new Deposit(1, 1, 1 , LocalDate.of(2022,2,2),
+                15.2, 4);
+        List<Deposit> expectedDeposits = List.of(deposit);
+
+        when(depositRepository.findAll()).thenReturn(expectedDeposits);
+
+        List<Deposit> actualDeposits = depositService.findAll();
+
+        assertEquals(expectedDeposits.size(), actualDeposits.size());
+        for (int i = 0; i < expectedDeposits.size(); i++) {
+            Deposit deposit1 = expectedDeposits.get(i);
+            Deposit deposit2 = actualDeposits.get(i);
+            assertEquals(deposit1.getId(), deposit2.getId());
+            assertEquals(deposit1.getBankId(), deposit2.getBankId());
+            assertEquals(deposit1.getClientId(), deposit2.getClientId());
+            assertEquals(deposit1.getOpeningDate(), deposit2.getOpeningDate());
+            assertEquals(deposit1.getInterestRate(), deposit2.getInterestRate());
+            assertEquals(deposit1.getTermMonths(), deposit2.getTermMonths());
+        }
+
+        verify(depositRepository, times(1)).findAll();
     }
 }
