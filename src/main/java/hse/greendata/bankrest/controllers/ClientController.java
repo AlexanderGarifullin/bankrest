@@ -1,18 +1,17 @@
 package hse.greendata.bankrest.controllers;
 
-import hse.greendata.bankrest.dto.BankDTO;
 import hse.greendata.bankrest.dto.ClientDTO;
-import hse.greendata.bankrest.dto.OrganizationalLegalFormDTO;
-import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.models.Client;
-import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.services.ClientService;
+import hse.greendata.bankrest.services.OrganizationalLegalFormService;
 import hse.greendata.bankrest.util.exceptions.Bank.BankException;
-import hse.greendata.bankrest.util.exceptions.Bank.BankNotCreatedException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientException;
+import hse.greendata.bankrest.util.exceptions.Client.ClientNotCreatedException;
 import hse.greendata.bankrest.util.exceptions.ErrorMessagesBuilder;
 import hse.greendata.bankrest.util.exceptions.ErrorResponse;
+import hse.greendata.bankrest.util.validators.ClientValidator;
 import jakarta.validation.Valid;
+import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/client")
@@ -31,9 +29,12 @@ public class ClientController {
     private final ModelMapper modelMapper;
     private final ErrorMessagesBuilder errorMessagesBuilder;
 
+    private final ClientValidator clientValidator;
+
     @Autowired
-    public ClientController(ClientService clientService, ModelMapper modelMapper, ErrorMessagesBuilder errorMessagesBuilder) {
+    public ClientController(ClientService clientService, OrganizationalLegalFormService organizationalLegalFormService, ModelMapper modelMapper, ErrorMessagesBuilder errorMessagesBuilder, ClientValidator clientValidator) {
         this.clientService = clientService;
+        this.clientValidator = clientValidator;
         this.modelMapper = modelMapper;
         this.errorMessagesBuilder = errorMessagesBuilder;
     }
@@ -51,14 +52,20 @@ public class ClientController {
     @PostMapping
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid ClientDTO clientDTO,
                                              BindingResult bindingResult){
-//        bankValidator.validate(convertToBank(bankDTO),
-//                bindingResult);
+        clientValidator.validate(convertToClient(clientDTO),
+                bindingResult);
 
-//        if (bindingResult.hasErrors()){
-//            throwException(bindingResult, BankNotCreatedException.class);
-//        }
+        if (bindingResult.hasErrors()){
+            throwException(bindingResult, ClientNotCreatedException.class);
+        }
         clientService.save(convertToClient(clientDTO));
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @SneakyThrows
+    private void throwException(BindingResult bindingResult, Class<? extends ClientException> exceptionClass){
+        throw exceptionClass.getDeclaredConstructor(String.class)
+                .newInstance(errorMessagesBuilder.buildErrorMessages(bindingResult));
     }
 
     @ExceptionHandler(ClientException.class)
@@ -72,23 +79,10 @@ public class ClientController {
 
 
     private Client convertToClient(ClientDTO clientDTO) {
-        Client client = modelMapper.map(clientDTO, Client.class);
-
-        // Преобразование OrganizationalLegalFormDTO в OrganizationalLegalForm
-        OrganizationalLegalForm organizationalLegalForm =
-                modelMapper.map(clientDTO.getOrganizationalLegalForm(), OrganizationalLegalForm.class);
-
-        // Установка преобразованного OrganizationalLegalForm в Client
-        client.setOrganizationalLegalForm(organizationalLegalForm);
-        return client;
+        return modelMapper.map(clientDTO, Client.class);
     }
 
-
     private ClientDTO convertToClientDTO(Client client){
-        ClientDTO clientDTO = modelMapper.map(client, ClientDTO.class);
-        OrganizationalLegalFormDTO organizationalLegalFormDTO =
-                modelMapper.map(client.getOrganizationalLegalForm(), OrganizationalLegalFormDTO.class);
-        clientDTO.setOrganizationalLegalForm(organizationalLegalFormDTO);
-        return clientDTO;
+        return modelMapper.map(client, ClientDTO.class);
     }
 }
