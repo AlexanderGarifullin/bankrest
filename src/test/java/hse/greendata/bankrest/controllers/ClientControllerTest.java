@@ -83,4 +83,25 @@ class ClientControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].organizationalLegalFormId")
                         .value(1));
     }
+
+    @Test
+    void testGetClientsById() throws Exception{
+        Client client = new Client(1, "client1", "c1",
+                "Россия, Москва, 117312, ул. Тверская, д. 10", 1);
+
+        when(service.findOne(1)).thenReturn(client);
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/client/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name")
+                        .value("client1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.shortName")
+                        .value("c1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.address")
+                        .value("Россия, Москва, 117312, ул. Тверская, д. 10"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.organizationalLegalFormId")
+                        .value(1));
+    }
 }
