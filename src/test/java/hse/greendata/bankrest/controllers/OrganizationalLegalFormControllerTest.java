@@ -35,7 +35,7 @@ class OrganizationalLegalFormControllerTest {
 
 
     @Test
-    void getOrganizationalLegalForms() throws Exception {
+    void testGetOrganizationalLegalForms() throws Exception {
         OrganizationalLegalForm form1 = new OrganizationalLegalForm(1, "Form 1");
         OrganizationalLegalForm form2 = new OrganizationalLegalForm(2, "Form 2");
         List<OrganizationalLegalForm> forms = Arrays.asList(form1, form2);
@@ -53,7 +53,17 @@ class OrganizationalLegalFormControllerTest {
     }
 
     @Test
-    void testGetOrganizationalLegalForms() {
+    void testGetOrganizationalLegalFormById() throws Exception{
+        OrganizationalLegalForm form = new OrganizationalLegalForm(1, "Form 1");
+
+        when(service.findOne(1)).thenReturn(form);
+
+        String expectedJsonResponse = "{\"name\":\"Form 1\"}";
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/olf/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(expectedJsonResponse));
     }
 
     @Test
