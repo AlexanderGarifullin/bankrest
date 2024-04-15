@@ -36,8 +36,11 @@ public class DepositController {
     }
 
     @GetMapping("")
-    public List<Deposit> getClients(){
-        return depositService.findAll();
+    public List<Deposit> getClients(@RequestParam(required = false) String sort){
+        if (sort == null) {
+            sort = "id";
+        }
+        return depositService.findAll(sort);
     }
 
     @GetMapping("/{id}")

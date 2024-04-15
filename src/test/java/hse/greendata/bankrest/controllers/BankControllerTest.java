@@ -43,7 +43,7 @@ class BankControllerTest {
         Bank bank1 = new Bank(1, "Bank 1", "123456789");
         Bank bank2 = new Bank(2, "Bank 2", "987654321");
         List<Bank> banks = Arrays.asList(bank1, bank2);
-        when(service.findAll()).thenReturn(banks);
+        when(service.findAll("id")).thenReturn(banks);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/bank")
                         .contentType(MediaType.APPLICATION_JSON))

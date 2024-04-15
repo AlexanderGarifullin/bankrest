@@ -2,12 +2,14 @@ package hse.greendata.bankrest.services;
 
 import hse.greendata.bankrest.models.Deposit;
 import hse.greendata.bankrest.repositories.DepositRepository;
+import hse.greendata.bankrest.util.exceptions.Deposit.DepositIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.Deposit.DepositNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -65,9 +67,9 @@ class DepositServiceTest {
                 15.2, 4);
         List<Deposit> expectedDeposits = List.of(deposit);
 
-        when(depositRepository.findAll()).thenReturn(expectedDeposits);
+        when(depositRepository.findAll(Sort.by("id"))).thenReturn(expectedDeposits);
 
-        List<Deposit> actualDeposits = depositService.findAll();
+        List<Deposit> actualDeposits = depositService.findAll("id");
 
         assertEquals(expectedDeposits.size(), actualDeposits.size());
         for (int i = 0; i < expectedDeposits.size(); i++) {
@@ -81,7 +83,14 @@ class DepositServiceTest {
             assertEquals(deposit1.getTermMonths(), deposit2.getTermMonths());
         }
 
-        verify(depositRepository, times(1)).findAll();
+        verify(depositRepository, times(1)).findAll(Sort.by("id"));
+    }
+
+    @Test
+    void testFindAll_WithIllegalParameter_ReturnIllegalSortArgumentExectpion() {
+        assertThrows(DepositIllegalSortArgument.class, () -> {
+            depositService.findAll("invalidField");
+        });
     }
 
     @Test

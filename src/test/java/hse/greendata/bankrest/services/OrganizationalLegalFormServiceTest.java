@@ -2,12 +2,14 @@ package hse.greendata.bankrest.services;
 
 import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.repositories.OrganizationalLegalFormRepository;
+import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,9 +59,9 @@ class OrganizationalLegalFormServiceTest {
         OrganizationalLegalForm form = new OrganizationalLegalForm(1, "form");
         List<OrganizationalLegalForm> expectedForms = List.of(form);
 
-        when(organizationalLegalFormRepository.findAll()).thenReturn(expectedForms);
+        when(organizationalLegalFormRepository.findAll(Sort.by("id"))).thenReturn(expectedForms);
 
-        List<OrganizationalLegalForm> actualForms = organizationalLegalFormService.findAll();
+        List<OrganizationalLegalForm> actualForms = organizationalLegalFormService.findAll("id");
 
         assertEquals(expectedForms.size(), actualForms.size());
         for (int i = 0; i < expectedForms.size(); i++) {
@@ -69,7 +71,15 @@ class OrganizationalLegalFormServiceTest {
             assertEquals(form1.getName(), form2.getName());
         }
 
-        verify(organizationalLegalFormRepository, times(1)).findAll();
+        verify(organizationalLegalFormRepository, times(1)).findAll(Sort.by("id"));
+    }
+
+
+    @Test
+    void testFindAll_WithIllegalParameter_ReturnIllegalSortArgumentExectpion() {
+        assertThrows(OrganizationalLegalFormIllegalSortArgument.class, () -> {
+            organizationalLegalFormService.findAll("invalidField");
+        });
     }
 
     @Test

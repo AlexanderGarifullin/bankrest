@@ -39,8 +39,11 @@ public class OrganizationalLegalFormController {
     }
 
     @GetMapping("")
-    public List<OrganizationalLegalForm> getOrganizationalLegalForms(){
-        return organizationalLegalFormService.findAll();
+    public List<OrganizationalLegalForm> getOrganizationalLegalForms(@RequestParam(required = false) String sort){
+        if (sort == null) {
+            sort = "id";
+        }
+        return organizationalLegalFormService.findAll(sort);
     }
 
     @GetMapping("/{id}")

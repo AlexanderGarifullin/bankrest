@@ -2,12 +2,14 @@ package hse.greendata.bankrest.services;
 
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.repositories.ClientRepository;
+import hse.greendata.bankrest.util.exceptions.Client.ClientIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.Client.ClientNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +49,13 @@ class ClientServiceTest {
     }
 
     @Test
+    void testFindAll_WithIllegalParameter_ReturnIllegalSortArgumentExectpion() {
+        assertThrows(ClientIllegalSortArgument.class, () -> {
+            clientService.findAll("invalidField");
+        });
+    }
+
+    @Test
     void testFindOne_WhenClientNotExists_ThrowException() {
         when(clientRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -63,9 +72,9 @@ class ClientServiceTest {
                 "Россия, Москва, 117312, ул. Тверская, д. 10", 1);
         List<Client> expectedClients = List.of(client);
 
-        when(clientRepository.findAll()).thenReturn(expectedClients);
+        when(clientRepository.findAll(Sort.by("id"))).thenReturn(expectedClients);
 
-        List<Client> actualClients = clientService.findAll();
+        List<Client> actualClients = clientService.findAll("id");
 
         assertEquals(expectedClients.size(), actualClients.size());
         for (int i = 0; i < expectedClients.size(); i++) {
@@ -78,7 +87,7 @@ class ClientServiceTest {
             assertEquals(client1.getOrganizationalLegalFormId(), client2.getOrganizationalLegalFormId());
         }
 
-        verify(clientRepository, times(1)).findAll();
+        verify(clientRepository, times(1)).findAll(Sort.by("id"));
     }
 
     @Test

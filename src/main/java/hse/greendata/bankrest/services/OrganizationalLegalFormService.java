@@ -2,8 +2,11 @@ package hse.greendata.bankrest.services;
 
 import hse.greendata.bankrest.models.OrganizationalLegalForm;
 import hse.greendata.bankrest.repositories.OrganizationalLegalFormRepository;
+import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.OrganizationalLegalForm.OrganizationalLegalFormNotFoundException;
+import hse.greendata.bankrest.util.reflections.ReflectionFields;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +24,11 @@ public class OrganizationalLegalFormService {
         this.organizationalLegalFormRepository = organizationalLegalFormRepository;
     }
 
-    public List<OrganizationalLegalForm> findAll() {
-        return organizationalLegalFormRepository.findAll();
+    public List<OrganizationalLegalForm> findAll(String sort) {
+        if (ReflectionFields.hasField(OrganizationalLegalForm.class, sort))  {
+            return organizationalLegalFormRepository.findAll(Sort.by(sort));
+        }
+        throw new OrganizationalLegalFormIllegalSortArgument("Field " + sort + " does not exist in OrganizationalLegalForm class");
     }
 
     public OrganizationalLegalForm findOne(int id) {

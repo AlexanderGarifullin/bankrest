@@ -2,12 +2,14 @@ package hse.greendata.bankrest.services;
 
 import hse.greendata.bankrest.models.Bank;
 import hse.greendata.bankrest.repositories.BankRepository;
+import hse.greendata.bankrest.util.exceptions.Bank.BankIllegalSortArgument;
 import hse.greendata.bankrest.util.exceptions.Bank.BankNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,9 +58,9 @@ class BankServiceTest {
         Bank bank = new Bank(1, "bank", "123456789");
         List<Bank> expectedBanks = List.of(bank);
 
-        when(bankRepository.findAll()).thenReturn(expectedBanks);
+        when(bankRepository.findAll(Sort.by("id"))).thenReturn(expectedBanks);
 
-        List<Bank> actualBanks = bankService.findAll();
+        List<Bank> actualBanks = bankService.findAll("id");
 
         assertEquals(expectedBanks.size(), actualBanks.size());
         for (int i = 0; i < expectedBanks.size(); i++) {
@@ -69,7 +71,14 @@ class BankServiceTest {
             assertEquals(bank1.getBik(), bank2.getBik());
         }
 
-        verify(bankRepository, times(1)).findAll();
+        verify(bankRepository, times(1)).findAll(Sort.by("id"));
+    }
+
+    @Test
+    void testFindAll_WithIllegalParameter_ReturnIllegalSortArgumentExectpion() {
+        assertThrows(BankIllegalSortArgument.class, () -> {
+            bankService.findAll("invalidField");
+        });
     }
 
     @Test

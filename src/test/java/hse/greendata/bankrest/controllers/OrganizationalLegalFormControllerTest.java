@@ -42,7 +42,7 @@ class OrganizationalLegalFormControllerTest {
         OrganizationalLegalForm form1 = new OrganizationalLegalForm(1, "Form 1");
         OrganizationalLegalForm form2 = new OrganizationalLegalForm(2, "Form 2");
         List<OrganizationalLegalForm> forms = Arrays.asList(form1, form2);
-        when(service.findAll()).thenReturn(forms);
+        when(service.findAll("id")).thenReturn(forms);
 
 
         mockMvc.perform(MockMvcRequestBuilders.get("/olf")

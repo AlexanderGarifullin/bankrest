@@ -40,8 +40,11 @@ public class ClientController {
     }
 
     @GetMapping("")
-    public List<Client> getClients(){
-        return clientService.findAll();
+    public List<Client> getClients(@RequestParam(required = false) String sort){
+        if (sort == null) {
+            sort = "id";
+        }
+        return clientService.findAll(sort);
     }
 
     @GetMapping("/{id}")
