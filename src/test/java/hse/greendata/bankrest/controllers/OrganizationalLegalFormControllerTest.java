@@ -131,11 +131,6 @@ class OrganizationalLegalFormControllerTest {
     void testDelete() throws Exception{
         int idToDelete = 1;
 
-        OrganizationalLegalForm formToDelete = new OrganizationalLegalForm(idToDelete, "Form to delete");
-        List<OrganizationalLegalForm> forms = List.of(formToDelete);
-
-        when(service.findAll()).thenReturn(forms);
-
         mockMvc.perform(MockMvcRequestBuilders.delete("/olf/{id}", idToDelete)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
