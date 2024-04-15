@@ -33,6 +33,14 @@ public class ClientService {
                 new ClientNotFoundException("Client with id " + id + " not found"));
     }
 
+    public Optional<Client> findOneByName(String name) {
+        return clientRepository.findByName(name);
+    }
+
+    public Optional<Client> findOneByShortName(String shortName) {
+        return clientRepository.findByShortName(shortName);
+    }
+
     @Transactional
     public void save(Client client) {
         clientRepository.save(client);
