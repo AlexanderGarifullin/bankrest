@@ -2,11 +2,13 @@ package hse.greendata.bankrest.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -15,6 +17,7 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 public class Client {
     @Id
     @Column(name = "id")
@@ -38,8 +41,7 @@ public class Client {
             message = "Address should be in this format: County, City, Index, Street, Home")
     private String address;
 
-    @ManyToOne
-    @NotBlank(message = "Organizational legal form is required")
-    @JoinColumn(name = "organizational_legal_form_id", referencedColumnName = "id")
-    private OrganizationalLegalForm organizationalLegalForm;
+    @Column(name = "organizational_legal_form_id")
+    @NotNull(message = "Organizational legal form is required")
+    private Integer organizationalLegalFormId;
 }

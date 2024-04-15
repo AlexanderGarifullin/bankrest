@@ -5,13 +5,16 @@ import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class ClientDTO {
     @NotBlank(message = "Name is required")
     @Size(min = 1, max = 255, message = "Name should be between 1 and 255 characters")
@@ -27,6 +30,6 @@ public class ClientDTO {
             message = "Address should be in this format: County, City, Index, Street, Home")
     private String address;
 
-    @NotBlank(message = "Organizational legal form is required")
-    private OrganizationalLegalFormDTO organizationalLegalForm;
+    @NotNull(message = "Organizational legal form id is required")
+    private Integer organizationalLegalFormId;
 }
