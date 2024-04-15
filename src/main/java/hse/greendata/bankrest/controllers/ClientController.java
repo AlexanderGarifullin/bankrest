@@ -1,12 +1,15 @@
 package hse.greendata.bankrest.controllers;
 
+import hse.greendata.bankrest.dto.BankDTO;
 import hse.greendata.bankrest.dto.ClientDTO;
 import hse.greendata.bankrest.models.Client;
 import hse.greendata.bankrest.services.ClientService;
 import hse.greendata.bankrest.services.OrganizationalLegalFormService;
 import hse.greendata.bankrest.util.exceptions.Bank.BankException;
+import hse.greendata.bankrest.util.exceptions.Bank.BankNotUpdatedException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientNotCreatedException;
+import hse.greendata.bankrest.util.exceptions.Client.ClientNotUpdatedException;
 import hse.greendata.bankrest.util.exceptions.ErrorMessagesBuilder;
 import hse.greendata.bankrest.util.exceptions.ErrorResponse;
 import hse.greendata.bankrest.util.validators.ClientValidator;
@@ -59,6 +62,20 @@ public class ClientController {
             throwException(bindingResult, ClientNotCreatedException.class);
         }
         clientService.save(convertToClient(clientDTO));
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<HttpStatus> update(@RequestBody @Valid ClientDTO clientDTO,
+                                             BindingResult bindingResult,
+                                             @PathVariable("id") int id) {
+        clientValidator.validate(convertToClient(clientDTO),
+                bindingResult);
+
+        if (bindingResult.hasErrors()){
+            throwException(bindingResult, ClientNotUpdatedException.class);
+        }
+        clientService.update(id, convertToClient(clientDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
