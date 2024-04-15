@@ -7,8 +7,10 @@ import hse.greendata.bankrest.models.Deposit;
 import hse.greendata.bankrest.services.DepositService;
 import hse.greendata.bankrest.util.exceptions.Client.ClientException;
 import hse.greendata.bankrest.util.exceptions.Client.ClientNotCreatedException;
+import hse.greendata.bankrest.util.exceptions.Client.ClientNotUpdatedException;
 import hse.greendata.bankrest.util.exceptions.Deposit.DepositException;
 import hse.greendata.bankrest.util.exceptions.Deposit.DepositNotCreatedException;
+import hse.greendata.bankrest.util.exceptions.Deposit.DepositNotUpdatedException;
 import hse.greendata.bankrest.util.exceptions.ErrorMessagesBuilder;
 import hse.greendata.bankrest.util.exceptions.ErrorResponse;
 import hse.greendata.bankrest.util.validators.DepositValidator;
@@ -57,7 +59,21 @@ public class DepositController {
         if (bindingResult.hasErrors()){
             throwException(bindingResult, DepositNotCreatedException.class);
         }
-        depositDTO.save(convertToDeposit(depositDTO));
+        depositService.save(convertToDeposit(depositDTO));
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<HttpStatus> update(@RequestBody @Valid DepositDTO depositDTO,
+                                             BindingResult bindingResult,
+                                             @PathVariable("id") int id) {
+        depositValidator.validate(convertToDeposit(depositDTO),
+                bindingResult);
+
+        if (bindingResult.hasErrors()){
+            throwException(bindingResult, DepositNotUpdatedException.class);
+        }
+        depositService.update(id, convertToDeposit(depositDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
