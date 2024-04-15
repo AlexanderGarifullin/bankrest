@@ -87,5 +87,20 @@ class DepositControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].termMonths").value(6));
     }
 
+    @Test
+    void testGetDepositsById() throws Exception{
+        Deposit deposit = new Deposit(1, 1 ,1, LocalDate.of(2020, 3, 20),
+                10.0, 3);
+        when(service.findOne(1)).thenReturn(deposit);
 
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/deposit/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.clientId").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.bankId").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.openingDate").value("2020-03-20"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.interestRate").value(10.0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.termMonths").value(3));
+    }
 }
