@@ -103,4 +103,20 @@ class BankServiceTest {
         assertEquals(bank.getBik(), b.getBik());
     }
 
+    @Test
+    void testFindOneById_WhenBankExist_ReturnBank() {
+        Bank bank = new Bank(1, "bank", "123456789");
+        when(bankRepository.findById(bank.getId())).thenReturn(Optional.of(bank));
+
+        Optional<Bank> result = bankService.findOneById(bank.getId());
+
+        assert(result.isPresent());
+        Bank b = result.orElse(null);
+        assertEquals(bank.getId(),b.getId());
+        assertEquals(bank.getName(), b.getName());
+        assertEquals(bank.getBik(), b.getBik());
+    }
+
+
+
 }
