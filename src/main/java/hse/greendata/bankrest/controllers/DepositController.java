@@ -40,6 +40,16 @@ public class DepositController {
         return convertToDepositDTO(depositService.findOne(id));
     }
 
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+        depositService.delete(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+
+
     @ExceptionHandler(DepositException.class)
     public ResponseEntity<ErrorResponse> handleDepositException(DepositException ex) {
         ErrorResponse response = new ErrorResponse(
@@ -48,7 +58,6 @@ public class DepositController {
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
 
     private DepositDTO convertToDepositDTO(Deposit deposit){
         return modelMapper.map(deposit, DepositDTO.class);
