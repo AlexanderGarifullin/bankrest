@@ -104,5 +104,15 @@ class OrganizationalLegalFormServiceTest {
         verify(organizationalLegalFormRepository, times(1)).findById(form.getId());
     }
 
+    @Test
+    void testSave() {
+        OrganizationalLegalForm form = new OrganizationalLegalForm(1, "form");
+
+        organizationalLegalFormService.save(form);
+
+        verify(organizationalLegalFormRepository, times(1))
+                .save(any(OrganizationalLegalForm.class));
+    }
+
 
 }
