@@ -66,7 +66,7 @@ class DepositControllerTest {
         Deposit deposit2 = new Deposit(2, 1, 2, LocalDate.of(2023, 6, 10),
                 5.2, 6);
         List<Deposit> deposits = Arrays.asList(deposit1, deposit2);
-        when(service.findAll()).thenReturn(deposits);
+        when(service.findAll("id")).thenReturn(deposits);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/deposit")
                         .contentType(MediaType.APPLICATION_JSON))
