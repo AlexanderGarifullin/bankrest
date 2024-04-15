@@ -79,6 +79,12 @@ public class ClientController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+        clientService.delete(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
     @SneakyThrows
     private void throwException(BindingResult bindingResult, Class<? extends ClientException> exceptionClass){
         throw exceptionClass.getDeclaredConstructor(String.class)
