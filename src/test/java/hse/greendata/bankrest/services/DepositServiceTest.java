@@ -106,4 +106,13 @@ class DepositServiceTest {
 
         assertEquals(id, deposit.getId());
     }
+
+    @Test
+    void testDelete() {
+        int id = 1;
+
+        depositService.delete(id);
+
+        verify(depositRepository, times(1)).deleteById(id);
+    }
 }
