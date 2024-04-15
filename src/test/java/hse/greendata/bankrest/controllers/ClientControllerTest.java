@@ -62,7 +62,7 @@ class ClientControllerTest {
                 "Россия, Москва, 117312, ул. Тверская, д. 10", 1);
 
         List<Client> clients = Arrays.asList(client1, client2);
-        when(service.findAll()).thenReturn(clients);
+        when(service.findAll("id")).thenReturn(clients);
 
 
         mockMvc.perform(MockMvcRequestBuilders.get("/client")
