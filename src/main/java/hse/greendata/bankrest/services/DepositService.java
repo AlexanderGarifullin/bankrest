@@ -32,6 +32,10 @@ public class DepositService {
                 new DepositNotFoundException("Client with id " + id + " not found"));
     }
 
+    @Transactional
+    public void save(Deposit deposit) {
+        depositRepository.save(deposit);
+    }
 
     @Transactional
     public void delete(int id) {
