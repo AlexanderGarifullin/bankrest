@@ -38,6 +38,12 @@ public class DepositService {
     }
 
     @Transactional
+    public void update(int id, Deposit updatedDeposit) {
+        updatedDeposit.setId(id);
+        depositRepository.save(updatedDeposit);
+    }
+
+    @Transactional
     public void delete(int id) {
         depositRepository.deleteById(id);
     }
